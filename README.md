@@ -1,75 +1,141 @@
-# Implementation-of-Decision-Tree-Regressor-Model-for-Predicting-the-Salary-of-the-Employee
+# Implementation-of-K-Means-Clustering-for-Customer-Segmentation
 
 ## AIM:
-To write a program to implement the Decision Tree Regressor Model for Predicting the Salary of the Employee.
+To write a program to implement the K Means Clustering for Customer Segmentation.
 
 ## Equipments Required:
 1. Hardware – PCs
 2. Anaconda – Python 3.7 Installation / Jupyter notebook
 
 ## Algorithm
-1. Import the libraries and read the data frame using pandas.
-2. Calculate the null values present in the dataset and apply label encoder. 
-3. Determine test and training data set and apply decison tree regression in dataset.
-4. Calculate Mean square error,data prediction and r2.
+1.Import dataset and print head,info of the dataset  
+2.check for null values   
+3.Import kmeans and fit it to the dataset    
+4.Plot the graph using elbow method    
+5.Print the predicted array    
+6.Plot the customer segments    
 
 ## Program:
 ```
 /*
-Program to implement the Decision Tree Regressor Model for Predicting the Salary of the Employee.
-Developed by: Vishwa vasu R
-RegisterNumber: 212222040183
+Program to implement the K Means Clustering for Customer Segmentation.
+Developed by: vishwa vasu R
+RegisterNumber:  212222040183
 */
 ```
-```
+```python
+
 import pandas as pd
+
 import matplotlib.pyplot as plt
-from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeRegressor
-from sklearn import metrics
-from sklearn.preprocessing import LabelEncoder
-data = pd.read_csv("/content/Salary.csv")
-print(data.head())
-print(data.info())
-print(data.isnull().sum())
 
-le = LabelEncoder()
-data["Position"] = le.fit_transform(data["Position"])
-print(data.head())
+data=pd.read_csv("/content/Mall_Customers (1).csv")
 
-x = data[["Position", "Level"]]
-y = data["Salary"]
-x_train, x_test, y_train, y_test = train_test_split(
-    x, y, test_size=0.2, random_state=2
-)
-dt = DecisionTreeRegressor()
-dt.fit(x_train, y_train)
+data.head()
 
-y_pred = dt.predict(x_test)
-mse = metrics.mean_squared_error(y_test, y_pred)
-print("Mean Squared Error:", mse)
+data.info()
 
-r2 = metrics.r2_score(y_test, y_pred)
-print("R2 Score:", r2)
+data.isnull().sum()
 
-print("Predicted Salary for [5,6]:", dt.predict([[5, 6]]))
+from sklearn.cluster import KMeans
 
-plt.figure(figsize=(20, 8))
-plot_tree(dt, feature_names=x.columns, filled=True)
-plt.show()
+wcss=[]
 
+for i in range(1,11):
+
+kmeans=KMeans(n_clusters=i,init="k-means++")
+
+kmeans.fit(data.iloc[:,3:])
+
+wcss.append(kmeans.inertia_)
+
+plt.plot(range(1,11),wcss)
+
+plt.xlabel("No_of_Clusters")
+
+plt.ylabel("wcss")
+
+plt.title("Elbow Method")
+
+km=KMeans(n_clusters=5)
+
+km.fit(data.iloc[:,3:])
+
+y_pred=km.predict(data.iloc[:,3:])
+
+y_pred
+
+data["cluster"]=y_pred
+
+df0=data[data["cluster"]==0]
+
+df1=data[data["cluster"]==1]
+
+df2=data[data["cluster"]==2]
+
+df3=data[data["cluster"]==3]
+
+df4=data[data["cluster"]==4]
+
+plt.scatter(df0["Annual Income (k$)"],df0["Spending Score (1-100)"],c="red",label="cluster0")
+
+plt.scatter(df1["Annual Income (k$)"],df1["Spending Score (1-100)"],c="black",label="cluster1")
+
+plt.scatter(df2["Annual Income (k$)"],df2["Spending Score (1-100)"],c="blue",label="cluster2")
+
+plt.scatter(df3["Annual Income (k$)"],df3["Spending Score (1-100)"],c="green",label="cluster3")
+
+plt.scatter(df4["Annual Income (k$)"],df4["Spending Score (1-100)"],c="magenta",label="cluster4")
+
+plt.legend()
+
+plt.title("Customer Segment")
 ```
-
 ## Output:
-![Decision Tree Regressor Model for Predicting the Salary of the Employee](sam.png)
-![image](https://github.com/user-attachments/assets/211e7881-c9d6-48f4-97ea-895aca7eebc9)
-![image](https://github.com/user-attachments/assets/405bac59-a6b1-4271-81ce-b52951d867b0)
-![image](https://github.com/user-attachments/assets/2c069602-2e87-4e1e-a2c0-cc1bc56f5c01)
-![image](https://github.com/user-attachments/assets/a5a5b106-a3a4-4890-8ece-1635c2c973eb)
-![image](https://github.com/user-attachments/assets/3e674e0d-6b25-41da-ab92-60a417e9fa0c)
-![image](https://github.com/user-attachments/assets/74fb9217-376b-42b3-b2d2-7d181745ef8a)
-![image](https://github.com/user-attachments/assets/bf6b912f-327d-4a0b-bccf-9b95053cf7a7)
+### 1.DATA.HEAD():
+![image](https://github.com/gauthamkrishna7/Implementation-of-K-Means-Clustering-for-Customer-Segmentation/assets/141175025/4d9e425c-cc17-4c6b-a39a-aa2bb0e752cb)
+
+
+
+### 2.DATA.INF0():
+![image](https://github.com/gauthamkrishna7/Implementation-of-K-Means-Clustering-for-Customer-Segmentation/assets/141175025/6cbcd431-e331-4f20-bd4b-29589920fba8)
+
+
+### 3.DATA.ISNULL().SUM():
+
+![image](https://github.com/gauthamkrishna7/Implementation-of-K-Means-Clustering-for-Customer-Segmentation/assets/141175025/36f6c6e5-9b76-466e-b4e6-2551ef5c7577)
+
+
+
+### 4.PLOT USING ELBOW METHOD:
+![image](https://github.com/gauthamkrishna7/Implementation-of-K-Means-Clustering-for-Customer-Segmentation/assets/141175025/7d7d4b7c-3d84-4d97-b125-5feec3069372)
+
+
+
+### 5.K-MEANS CLUSTERING:
+![image](https://github.com/gauthamkrishna7/Implementation-of-K-Means-Clustering-for-Customer-Segmentation/assets/141175025/5529b341-0574-4b1c-95ae-a695fda3bca8)
+
+
+
+<br>
+
+### 6.Y_PRED ARRAY:
+![image](https://github.com/gauthamkrishna7/Implementation-of-K-Means-Clustering-for-Customer-Segmentation/assets/141175025/3215ec0e-5c5d-4ca5-ad05-534966f6b8da)
+
+
+### 7.CUSTOMER SEGMENT:
+
+![image](https://github.com/gauthamkrishna7/Implementation-of-K-Means-Clustering-for-Customer-Segmentation/assets/141175025/b212a326-178e-4816-b3b7-de6a4362e6ec)
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## Result:
-Thus the program to implement the Decision Tree Regressor Model for Predicting the Salary of the Employee is written and verified using python programming.
+Thus the program to implement the K Means Clustering for Customer Segmentation is written and verified using python programming.
